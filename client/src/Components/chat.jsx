@@ -6,12 +6,33 @@ import { Link } from "react-router-dom";
 
 const Chat = () => {
   const chatContainerRightPart = useRef(null);
+  const chatContainerHeading = useRef(null);
+  const chatContainerMain = useRef(null);
+  const chatContainerLeftPart = useRef(null);
+  const inputMessage = useRef(null);
+  const sendButton = useRef(null);
   const [loggedUser, setLoggedUser] = useState(null);
   const [SignIn, setSignIn] = useState();
   const [allUsers, getAllUsers] = useState([]);
   const [allChats, getAllChats] = useState([]);
   const [secondUser, setSecondUser] = useState(null);
-  const inputMessage = useRef(null);
+
+  useEffect(() => {
+    if (
+      chatContainerHeading.current &&
+      inputMessage.current &&
+      chatContainerMain.current &&
+      sendButton.current
+    ) {
+      chatContainerHeading.current.onclick = () => {
+        chatContainerMain.current.style.width = "59rem";
+        chatContainerHeading.current.style.width = "39.9rem";
+        inputMessage.current.style.width = "47.7%";
+        sendButton.current.style.left = "52rem";
+      };
+    }
+  }, []);
+
   //FETCHING ALL USERS
   //FETCHING ALL USERS
   //FETCHING ALL USERS
@@ -171,6 +192,7 @@ const Chat = () => {
       })
       .catch((err) => console.log("error in fetching all chats", err.message));
   };
+
   return (
     <div id="chat_container">
       <div id="chat_container_name">
@@ -179,11 +201,11 @@ const Chat = () => {
           Sign out
         </div>
       </div>
-      <div id="chat_container_main">
-        <div id="chat_container_heading">
+      <div id="chat_container_main" ref={chatContainerMain}>
+        <div id="chat_container_heading" ref={chatContainerHeading}>
           {secondUser == null ? "chat" : secondUser.name}
         </div>
-        <div id="chat_container_leftPart">
+        <div id="chat_container_leftPart" ref={chatContainerLeftPart}>
           {allUsers
             .filter((data) => data._id !== loggedUser.userId)
             .map((data, index) => {
@@ -221,6 +243,7 @@ const Chat = () => {
             <div
               onClick={messageSent}
               id="chat_container_rightPart_inputMessage_sendButton"
+              ref={sendButton}
             >
               Send
             </div>

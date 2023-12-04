@@ -125,6 +125,7 @@
   text-align: center;
   border: 2px solid red;
   font-size: x-large;
+  display: none;
 }
 #chat_container_name_logout {
   margin-left: 68.5rem;
@@ -134,26 +135,33 @@
   margin-top: -28px;
 }
 #chat_container_main {
-  margin-top: 1rem;
+  margin-top: 0rem;
   border: 2px solid blue;
+  width: 79rem;
+  /* width :69rem; */
 }
 #chat_container_heading {
   font-size: large;
   border: 2px solid green;
   text-align: center;
   height: 2rem;
+  cursor: pointer;
+  width: 59.9rem;
+  /* width:41.9rem */
+  margin-left: 19rem;
 }
 #chat_container_leftPart {
   border: 2px solid red;
-  width: 24%;
-  height: 28.7rem;
+  width: 18.7rem;
+  margin-top: -2.3rem;
+  height: 34.42rem;
   overflow-y: scroll;
 }
 #chat_container_rightPart {
   border: 2px solid purple;
   margin-left: 18.9rem;
-  height: 28.6rem;
-  margin-top: -29rem;
+  height: 32rem;
+  margin-top: -32.4rem;
   overflow-y: scroll;
 }
 #chat_container_rightPart_allChats {
@@ -170,15 +178,16 @@
   left: 19.7rem;
   position: fixed;
   width: 72.7%;
-  top: 31.9rem;
+  /* width:51.7% */
+  top: 32.2rem;
 }
 #chat_container_rightPart_inputMessage_sendButton {
   position: fixed;
-  top: 32rem;
+  top: 32.2rem;
   border: 2px solid #1937be;
   left: 72rem;
-  /* padding: 5px; */
-  /* padding-bottom: 17px; */
+  /* left:55.2rem */
+
   height: 2.5rem;
   text-align: center;
   font-size: x-large;
@@ -197,12 +206,11 @@
 /* //c child all users */
 
 #childAllUser_container {
-  width: 10rem;
   font-size: larger;
   cursor: pointer;
-  margin-top: 2rem;
-  border: 2px solid;
-  padding: 5px;
+  padding: 18px;
+  padding-left: 20px;
+  border-bottom: 2px solid;
 }
 
 /* //c child all users */
