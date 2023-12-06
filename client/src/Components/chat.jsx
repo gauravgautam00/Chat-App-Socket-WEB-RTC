@@ -9,6 +9,9 @@ const Chat = () => {
   const chatContainerHeading = useRef(null);
   const chatContainerMain = useRef(null);
   const chatContainerLeftPart = useRef(null);
+  const chatContainerMainContactDetail = useRef(null);
+  const chatContainerMainContactDetailBack = useRef(null);
+
   const inputMessage = useRef(null);
   const sendButton = useRef(null);
   const [loggedUser, setLoggedUser] = useState(null);
@@ -22,13 +25,31 @@ const Chat = () => {
       chatContainerHeading.current &&
       inputMessage.current &&
       chatContainerMain.current &&
-      sendButton.current
+      sendButton.current &&
+      chatContainerMainContactDetail.current &&
+      chatContainerMainContactDetailBack.current
     ) {
       chatContainerHeading.current.onclick = () => {
-        chatContainerMain.current.style.width = "59rem";
-        chatContainerHeading.current.style.width = "39.9rem";
-        inputMessage.current.style.width = "47.7%";
-        sendButton.current.style.left = "52rem";
+        if (chatContainerHeading.current.style.width == "39.9rem") {
+          chatContainerHeading.current.style.width = "58rem";
+          inputMessage.current.style.width = "64%";
+          sendButton.current.style.left = "73.43rem";
+          chatContainerRightPart.current.style.width = "76%";
+          chatContainerMainContactDetail.current.style.display = "none";
+        } else {
+          chatContainerHeading.current.style.width = "39.9rem";
+          inputMessage.current.style.width = "49.3%";
+          sendButton.current.style.left = "55.43rem";
+          chatContainerRightPart.current.style.width = "40rem";
+          chatContainerMainContactDetail.current.style.display = "block";
+        }
+      };
+      chatContainerMainContactDetailBack.current.onclick = () => {
+        chatContainerHeading.current.style.width = "58rem";
+        inputMessage.current.style.width = "64%";
+        sendButton.current.style.left = "73.43rem";
+        chatContainerRightPart.current.style.width = "76%";
+        chatContainerMainContactDetail.current.style.display = "none";
       };
     }
   }, []);
@@ -184,6 +205,7 @@ const Chat = () => {
         // console.log(res);
         getAllChats(res);
         if (chatContainerRightPart.current) {
+          console.log("Scroll to the last");
           chatContainerRightPart.current.scrollTo(
             0,
             chatContainerRightPart.current.scrollHeight
@@ -195,15 +217,12 @@ const Chat = () => {
 
   return (
     <div id="chat_container">
-      <div id="chat_container_name">
-        {loggedUser == null ? <Link to="/">Sign-Up</Link> : loggedUser.name}
-        <div onClick={signOutCalled} id="chat_container_name_logout">
-          Sign out
-        </div>
-      </div>
+      <div id="chat_container_myDetails"></div>
       <div id="chat_container_main" ref={chatContainerMain}>
         <div id="chat_container_heading" ref={chatContainerHeading}>
-          {secondUser == null ? "chat" : secondUser.name}
+          {secondUser == null
+            ? "Select User to initiate the chat"
+            : secondUser.name}
         </div>
         <div id="chat_container_leftPart" ref={chatContainerLeftPart}>
           {allUsers
@@ -247,6 +266,47 @@ const Chat = () => {
             >
               Send
             </div>
+          </div>
+        </div>
+        <div
+          id="chat_container_main_contactDetail"
+          ref={chatContainerMainContactDetail}
+        >
+          <div
+            id="chat_container_main_contactDetail_back"
+            ref={chatContainerMainContactDetailBack}
+          >
+            <span
+              id="chat_container_main_contactDetail_backIcon"
+              class="material-symbols-outlined"
+            >
+              arrow_back
+            </span>
+            <div id="chat_container_main_contactDetail_back_data">Back</div>
+          </div>
+          <div id="chat_container_main_contactDetail_profilePhoto">
+            <img
+              id="chat_container_main_contactDetail_profilePhoto_photo"
+              src="/Images/userDummy.png"
+              height="128px"
+              width="128px"
+            />
+          </div>
+          <div id="chat_container_main_contactDetail_name">
+            {secondUser ? secondUser.name : "Select User"}
+          </div>
+          <div id="chat_container_main_contactDetail_about">
+            <div id="chat_container_main_contactDetail_about_first">About</div>
+            <div id="chat_container_main_contactDetail_about_second">Happy</div>
+          </div>
+          <div id="chat_container_main_contactDetail_block">
+            Block {secondUser ? secondUser.name : "Select User"}
+          </div>
+          <div id="chat_container_main_contactDetail_report">
+            Report {secondUser ? secondUser.name : "Select User"}
+          </div>
+          <div id="chat_container_main_contactDetail_deleteChat">
+            Delete Chat
           </div>
         </div>
       </div>
