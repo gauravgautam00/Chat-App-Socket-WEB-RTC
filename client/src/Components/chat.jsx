@@ -19,40 +19,51 @@ const Chat = () => {
   const [allUsers, getAllUsers] = useState([]);
   const [allChats, getAllChats] = useState([]);
   const [secondUser, setSecondUser] = useState(null);
+  const [secondUserUp, setSecondUserUp] = useState(null);
 
   useEffect(() => {
+    // console.log("second user", secondUser);
+    // document.addEventListener("keydown", (e) => {
+    //   if (e.key === "Enter") {
+    //     messageSent();
+    //   }
+    // });
+
     if (
       chatContainerHeading.current &&
       inputMessage.current &&
       chatContainerMain.current &&
       sendButton.current &&
       chatContainerMainContactDetail.current &&
-      chatContainerMainContactDetailBack.current
+      chatContainerMainContactDetailBack.current &&
+      secondUserUp
     ) {
+      // console.log("second user", secondUser);
       chatContainerHeading.current.onclick = () => {
-        if (chatContainerHeading.current.style.width == "39.9rem") {
-          chatContainerHeading.current.style.width = "58rem";
+        if (chatContainerHeading.current.style.width == "39.99rem") {
+          // expand
+          chatContainerHeading.current.style.width = "58.2rem";
           inputMessage.current.style.width = "64%";
-          sendButton.current.style.left = "73.43rem";
-          chatContainerRightPart.current.style.width = "76%";
+          sendButton.current.style.left = "73.23rem";
+          chatContainerRightPart.current.style.width = "75.9%";
           chatContainerMainContactDetail.current.style.display = "none";
         } else {
-          chatContainerHeading.current.style.width = "39.9rem";
-          inputMessage.current.style.width = "49.3%";
-          sendButton.current.style.left = "55.43rem";
+          chatContainerHeading.current.style.width = "39.99rem";
+          inputMessage.current.style.width = "41.3%";
+          sendButton.current.style.left = "55.13rem";
           chatContainerRightPart.current.style.width = "40rem";
           chatContainerMainContactDetail.current.style.display = "block";
         }
       };
       chatContainerMainContactDetailBack.current.onclick = () => {
-        chatContainerHeading.current.style.width = "58rem";
+        chatContainerHeading.current.style.width = "58.2rem";
         inputMessage.current.style.width = "64%";
-        sendButton.current.style.left = "73.43rem";
-        chatContainerRightPart.current.style.width = "76%";
+        sendButton.current.style.left = "73.23rem";
+        chatContainerRightPart.current.style.width = "75.9%";
         chatContainerMainContactDetail.current.style.display = "none";
       };
     }
-  }, []);
+  }, [secondUser]);
 
   //FETCHING ALL USERS
   //FETCHING ALL USERS
@@ -168,7 +179,11 @@ const Chat = () => {
   //MESSAGE SEND
 
   const messageSent = () => {
-    if (localStorage.getItem("loggedUser") != null) {
+    if (
+      localStorage.getItem("loggedUser") &&
+      secondUserUp
+      // localStorage.getItem("secondUser")
+    ) {
       socket.emit("new message", {
         sender: loggedUser.userId,
         content: inputMessage.current.value,
@@ -191,8 +206,9 @@ const Chat = () => {
       secondUser: id,
     };
     setSecondUser({ name: name, userId: id });
-    console.log("two users", { firstUser: loggedUser.name, secondUser: id });
-    console.log(secondUser);
+    setSecondUserUp(true);
+    // console.log("two users", { firstUser: loggedUser.name, secondUser: id });
+    // console.log(secondUser);
     fetch("http://localhost:8880/chat/getChat", {
       method: "POST",
       headers: {
@@ -205,11 +221,8 @@ const Chat = () => {
         // console.log(res);
         getAllChats(res);
         if (chatContainerRightPart.current) {
-          console.log("Scroll to the last");
-          chatContainerRightPart.current.scrollTo(
-            0,
-            chatContainerRightPart.current.scrollHeight
-          );
+          chatContainerRightPart.current.scrollTop =
+            chatContainerRightPart.current.scrollHeight;
         }
       })
       .catch((err) => console.log("error in fetching all chats", err.message));
@@ -217,13 +230,67 @@ const Chat = () => {
 
   return (
     <div id="chat_container">
-      <div id="chat_container_myDetails"></div>
+      <div id="chat_container_myDetails">
+        <div id="chat_container_myDetails_first">
+          <span
+            id="chat_container_myDetails_first_icon"
+            class="material-symbols-outlined"
+          >
+            chat
+          </span>
+        </div>
+        <div id="chat_container_myDetails_second">
+          <span
+            id="chat_container_myDetails_second_icon"
+            class="material-symbols-outlined"
+          >
+            groups
+          </span>
+        </div>
+        <div id="chat_container_myDetails_third">
+          <span
+            id="chat_container_myDetails_third_icon"
+            class="material-symbols-outlined"
+          >
+            cloud
+          </span>
+        </div>
+        <div id="chat_container_myDetails_betweenFirst"></div>
+        <div id="chat_container_myDetails_fourth">
+          <span
+            id="chat_container_myDetails_fourth_icon"
+            class="material-symbols-outlined"
+          >
+            calendar_month
+          </span>
+        </div>
+        <div id="chat_container_myDetails_fifth">
+          <span
+            id="chat_container_myDetails_fifth_icon"
+            class="material-symbols-outlined"
+          >
+            settings
+          </span>
+        </div>
+        <div id="chat_container_myDetails_betweenSecond"></div>
+
+        <div id="chat_container_myDetails_sixth">
+          <span
+            id="chat_container_myDetails_sixth_icon"
+            class="material-symbols-outlined"
+          >
+            person
+          </span>
+        </div>
+      </div>
+
       <div id="chat_container_main" ref={chatContainerMain}>
         <div id="chat_container_heading" ref={chatContainerHeading}>
           {secondUser == null
             ? "Select User to initiate the chat"
             : secondUser.name}
         </div>
+
         <div id="chat_container_leftPart" ref={chatContainerLeftPart}>
           {allUsers
             .filter((data) => data._id !== loggedUser.userId)
