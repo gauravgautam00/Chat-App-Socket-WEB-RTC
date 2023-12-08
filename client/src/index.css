@@ -127,6 +127,8 @@
   width: 3rem;
   height: 35.4rem;
   margin-left: -8px;
+  z-index: 1;
+  background-color: white;
   position: relative;
 }
 #chat_container_myDetails_first_icon {
@@ -169,6 +171,9 @@
   cursor: pointer;
   border-radius: 50%;
 }
+#chat_container_myDetails_sixth {
+  cursor: pointer;
+}
 #chat_container_myDetails_sixth_icon {
   background-color: #f5f5f5;
   border: 2px solid;
@@ -210,6 +215,16 @@
   margin-top: 0px;
   margin-left: 18.3rem;
 }
+#chat_container_main_myAccount {
+  margin-top: -3.3rem;
+  position: absolute;
+  height: 35.5rem;
+  background-color: white;
+  width: 18rem;
+  border: 2px solid yellow;
+
+  transition: transform 2s;
+}
 #chat_container_leftPart {
   border: 2px solid red;
   width: 18.1rem;
@@ -217,6 +232,7 @@
   height: 35.5rem;
   overflow-y: scroll;
 }
+
 #chat_container_rightPart {
   border: 2px solid purple;
   margin-left: 18.3rem;

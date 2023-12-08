@@ -11,6 +11,8 @@ const Chat = () => {
   const chatContainerLeftPart = useRef(null);
   const chatContainerMainContactDetail = useRef(null);
   const chatContainerMainContactDetailBack = useRef(null);
+  const myAccountIcon = useRef(null);
+  const myAccountDetail = useRef(null);
 
   const inputMessage = useRef(null);
   const sendButton = useRef(null);
@@ -22,6 +24,22 @@ const Chat = () => {
   const [secondUserUp, setSecondUserUp] = useState(null);
 
   useEffect(() => {
+    if (myAccountIcon.current && myAccountDetail.current) {
+      // myAccountDetail.current.style.marginLeft = "-19rem";
+      myAccountIcon.current.onclick = () => {
+        if (
+          myAccountDetail.current.style.transform == "translate(-303px,0px)"
+        ) {
+          // myAccountDetail.current.style.display = "block";
+          myAccountDetail.current.style.transform = "translate(303px,0px)";
+        } else {
+          // myAccountDetail.current.style.display = "none";
+          myAccountDetail.current.style.transform = "translate(-303px,0px)";
+
+          // myAccountDetail.current.style.marginLeft = "-19rem";
+        }
+      };
+    }
     // console.log("second user", secondUser);
     // document.addEventListener("keydown", (e) => {
     //   if (e.key === "Enter") {
@@ -274,7 +292,7 @@ const Chat = () => {
         </div>
         <div id="chat_container_myDetails_betweenSecond"></div>
 
-        <div id="chat_container_myDetails_sixth">
+        <div id="chat_container_myDetails_sixth" ref={myAccountIcon}>
           <span
             id="chat_container_myDetails_sixth_icon"
             class="material-symbols-outlined"
@@ -290,7 +308,7 @@ const Chat = () => {
             ? "Select User to initiate the chat"
             : secondUser.name}
         </div>
-
+        <div id="chat_container_main_myAccount" ref={myAccountDetail}></div>
         <div id="chat_container_leftPart" ref={chatContainerLeftPart}>
           {allUsers
             .filter((data) => data._id !== loggedUser.userId)
@@ -307,6 +325,7 @@ const Chat = () => {
               );
             })}
         </div>
+
         <div id="chat_container_rightPart" ref={chatContainerRightPart}>
           <div id="chat_container_rightPart_allChats">
             {allChats.map((data, index) => {
