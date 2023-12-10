@@ -16,12 +16,14 @@ const Child_chats = (props) => {
       style={{
         textAlign: isLoggedUser ? "right" : "left",
         backgroundColor: isLoggedUser ? "white" : "rgb(226 226 226)",
-        height: isLoggedUser ? "39px" : "39px",
+        marginLeft: isLoggedUser ? "33vw" : "11px",
+        marginRight: isLoggedUser ? "0px" : "18rem",
+        backgroundColor: isLoggedUser ? "#2B5279" : "#182633",
         paddingLeft: "16px",
         paddingRight: "16px",
       }}
     >
-      {props.content}
+      <div>{props.content}</div>
     </div>
   );
 };

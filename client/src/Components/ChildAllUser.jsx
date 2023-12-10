@@ -1,9 +1,16 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 
 const ChildAllUser = (props) => {
   const userDiv = useRef(null);
 
-  const handleClick = () => {};
+  // useEffect(() => {
+  const handleClick = () => {
+    //   if (userDiv.current) {
+    //     console.log("clicked user");
+    //     userDiv.current.style.backgroundColor = "#2B5279";
+    //   }
+  };
+  // }, []);
   return (
     <div
       id="childAllUser_container"

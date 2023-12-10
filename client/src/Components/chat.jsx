@@ -23,29 +23,44 @@ const Chat = () => {
   const [secondUser, setSecondUser] = useState(null);
   const [secondUserUp, setSecondUserUp] = useState(null);
 
-  useEffect(() => {
-    if (myAccountIcon.current && myAccountDetail.current) {
-      // myAccountDetail.current.style.marginLeft = "-19rem";
-      myAccountIcon.current.onclick = () => {
-        if (
-          myAccountDetail.current.style.transform == "translate(-303px,0px)"
-        ) {
-          // myAccountDetail.current.style.display = "block";
-          myAccountDetail.current.style.transform = "translate(303px,0px)";
-        } else {
-          // myAccountDetail.current.style.display = "none";
-          myAccountDetail.current.style.transform = "translate(-303px,0px)";
+  const handleKeyDown = (event) => {
+    // Check if Shift + Enter is pressed
+    console.log("inside handleKeyDown");
+    if (inputMessage.current) {
+      if (event.key === "Enter" && event.shiftKey) {
+        console.log("full inside handleKeyDown");
 
-          // myAccountDetail.current.style.marginLeft = "-19rem";
+        // Insert a newline character
+
+        const cursorPosition = inputMessage.current.selectionStart;
+        const inputValue = inputMessage.current.value;
+        const newValue =
+          inputValue.substring(0, cursorPosition) +
+          "\n" +
+          inputValue.substring(inputMessage.current.selectionEnd);
+
+        // Update the input value
+        inputMessage.current.value = newValue;
+
+        // Prevent the default Enter key behavior
+        event.preventDefault();
+      }
+    }
+  };
+  useEffect(() => {
+    if (inputMessage.current) {
+      inputMessage.current.addEventListener("keydown", handleKeyDown);
+    }
+    if (myAccountIcon.current && myAccountDetail.current) {
+      myAccountDetail.current.style.marginLeft = "-19rem";
+      myAccountIcon.current.onclick = () => {
+        if (myAccountDetail.current.style.marginLeft == "-19rem") {
+          myAccountDetail.current.style.marginLeft = "0rem";
+        } else {
+          myAccountDetail.current.style.marginLeft = "-19rem";
         }
       };
     }
-    // console.log("second user", secondUser);
-    // document.addEventListener("keydown", (e) => {
-    //   if (e.key === "Enter") {
-    //     messageSent();
-    //   }
-    // });
 
     if (
       chatContainerHeading.current &&
@@ -53,31 +68,32 @@ const Chat = () => {
       chatContainerMain.current &&
       sendButton.current &&
       chatContainerMainContactDetail.current &&
-      chatContainerMainContactDetailBack.current &&
-      secondUserUp
+      chatContainerMainContactDetailBack.current
+      // &&
+      // secondUserUp
     ) {
       // console.log("second user", secondUser);
       chatContainerHeading.current.onclick = () => {
         if (chatContainerHeading.current.style.width == "39.99rem") {
           // expand
-          chatContainerHeading.current.style.width = "58.2rem";
-          inputMessage.current.style.width = "64%";
+          chatContainerHeading.current.style.width = "58.7rem";
+          inputMessage.current.style.width = "64.4%";
           sendButton.current.style.left = "73.23rem";
-          chatContainerRightPart.current.style.width = "75.9%";
+          chatContainerRightPart.current.style.width = "76.45%";
           chatContainerMainContactDetail.current.style.display = "none";
         } else {
           chatContainerHeading.current.style.width = "39.99rem";
           inputMessage.current.style.width = "41.3%";
-          sendButton.current.style.left = "55.13rem";
+          sendButton.current.style.left = "54.6rem";
           chatContainerRightPart.current.style.width = "40rem";
           chatContainerMainContactDetail.current.style.display = "block";
         }
       };
       chatContainerMainContactDetailBack.current.onclick = () => {
-        chatContainerHeading.current.style.width = "58.2rem";
-        inputMessage.current.style.width = "64%";
+        chatContainerHeading.current.style.width = "58.7rem";
+        inputMessage.current.style.width = "64.4%";
         sendButton.current.style.left = "73.23rem";
-        chatContainerRightPart.current.style.width = "75.9%";
+        chatContainerRightPart.current.style.width = "76.45%";
         chatContainerMainContactDetail.current.style.display = "none";
       };
     }
@@ -224,7 +240,7 @@ const Chat = () => {
       secondUser: id,
     };
     setSecondUser({ name: name, userId: id });
-    setSecondUserUp(true);
+
     // console.log("two users", { firstUser: loggedUser.name, secondUser: id });
     // console.log(secondUser);
     fetch("http://localhost:8880/chat/getChat", {
@@ -238,6 +254,7 @@ const Chat = () => {
       .then((res) => {
         // console.log(res);
         getAllChats(res);
+        setSecondUserUp(true);
         if (chatContainerRightPart.current) {
           chatContainerRightPart.current.scrollTop =
             chatContainerRightPart.current.scrollHeight;
@@ -304,11 +321,19 @@ const Chat = () => {
 
       <div id="chat_container_main" ref={chatContainerMain}>
         <div id="chat_container_heading" ref={chatContainerHeading}>
-          {secondUser == null
+          {secondUser == null || secondUserUp == null
             ? "Select User to initiate the chat"
             : secondUser.name}
         </div>
-        <div id="chat_container_main_myAccount" ref={myAccountDetail}></div>
+        <div id="chat_container_main_myAccount" ref={myAccountDetail}>
+          <div id="chat_container_main_myAccount_name">{loggedUser.name}</div>
+          <div id="chat_container_main_myAccount_newGroup">New Group</div>
+          <div id="chat_container_main_myAccount_contacts">Contacts</div>
+          <div id="chat_container_main_myAccount_calls">Calls</div>
+          <div id="chat_container_main_myAccount_savedMessage">
+            Saved Message
+          </div>
+        </div>
         <div id="chat_container_leftPart" ref={chatContainerLeftPart}>
           {allUsers
             .filter((data) => data._id !== loggedUser.userId)
@@ -384,6 +409,15 @@ const Chat = () => {
           <div id="chat_container_main_contactDetail_about">
             <div id="chat_container_main_contactDetail_about_first">About</div>
             <div id="chat_container_main_contactDetail_about_second">Happy</div>
+          </div>
+          <div id="chat_container_main_contactDetail_desc">
+            <div id="chat_container_main_contactDetail_desc_first">
+              Description
+            </div>
+            <div id="chat_container_main_contactDetail_desc_second">
+              We have two lives , and the second begins when we realize we only
+              have one
+            </div>
           </div>
           <div id="chat_container_main_contactDetail_block">
             Block {secondUser ? secondUser.name : "Select User"}
