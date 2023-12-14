@@ -326,7 +326,9 @@ const Chat = () => {
             : secondUser.name}
         </div>
         <div id="chat_container_main_myAccount" ref={myAccountDetail}>
-          <div id="chat_container_main_myAccount_name">{loggedUser.name}</div>
+          <div id="chat_container_main_myAccount_name">
+            {loggedUser ? loggedUser.name : null}
+          </div>
           <div id="chat_container_main_myAccount_newGroup">New Group</div>
           <div id="chat_container_main_myAccount_contacts">Contacts</div>
           <div id="chat_container_main_myAccount_calls">Calls</div>
