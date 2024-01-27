@@ -1,5 +1,5 @@
 #login_container {
-  border: 2px solid #1937be;
+  border: 2px solid #16252d;
   /* margin: auto; */
   width: 30rem;
   margin-left: 4rem;
@@ -12,11 +12,11 @@
   font-family: sans-serif;
   /* border-radius: 5px; */
   font-size: x-large;
-  border: 2px solid blue;
+  border: 2px solid #16252d;
   /* width: 29%; */
   margin-top: 0rem;
-  padding: 0.3rem;
-  background-color: #1937be;
+  padding: 0.5rem;
+  background-color: #16252d;
 }
 #login_name_input {
   font-size: large;
@@ -43,13 +43,13 @@
   color: white;
   border-radius: 5px;
   font-size: larger;
-  border: 2px solid blue;
+  border: 2px solid #16252d;
   width: 29%;
   margin-top: 9.5rem;
   cursor: pointer;
   padding: 0.3rem;
   margin-bottom: 10px;
-  background-color: #1937be;
+  background-color: #16252d;
   margin-left: 10rem;
 }
 
@@ -61,7 +61,7 @@
 /* signup */
 /* signup */
 #signup_container {
-  border: 2px solid #1937be;
+  border: 2px solid #16252d;
   margin-left: 44rem;
   margin-top: -26rem;
   width: 30rem;
@@ -72,11 +72,11 @@
   font-family: sans-serif;
   /* border-radius: 5px; */
   font-size: x-large;
-  border: 2px solid blue;
+  border: 2px solid #16252d;
   /* width: 29%; */
   margin-top: 0rem;
-  padding: 0.3rem;
-  background-color: #1937be;
+  padding: 0.5rem;
+  background-color: #16252d;
 }
 #signup_name_input {
   font-size: large;
@@ -103,13 +103,13 @@
   color: white;
   border-radius: 5px;
   font-size: larger;
-  border: 2px solid blue;
+  border: 2px solid #16252d;
   width: 29%;
   margin-top: 4.46rem;
   cursor: pointer;
   padding: 0.3rem;
   margin-bottom: 10px;
-  background-color: #1937be;
+  background-color: #16252d;
   margin-left: 10rem;
 }
 
