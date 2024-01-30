@@ -4,7 +4,7 @@ import Signup from "./signup";
 
 const landing_page = () => {
   return (
-    <div>
+    <div id="landing_page">
       <Login />
       <Signup />
     </div>
