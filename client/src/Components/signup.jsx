@@ -16,7 +16,7 @@ const Signup = () => {
         password: getPassword.current.value,
       };
 
-      fetch("http://localhost:8880/signup", {
+      fetch("https://chatsocket-4cdz.onrender.com/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

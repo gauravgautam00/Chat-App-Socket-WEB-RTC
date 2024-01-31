@@ -19,7 +19,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
-  "proxy": "http://localhost:80",
+  "proxy": "https://chatsocket-4cdz.onrender.com",
   "eslintConfig": {
     "extends": [
       "react-app",

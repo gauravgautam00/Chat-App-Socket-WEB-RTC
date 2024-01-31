@@ -111,7 +111,7 @@ const Chat = () => {
     if (localStorage.getItem("loggedUser") != null) {
       setLoggedUser(JSON.parse(localStorage.getItem("loggedUser")));
       // console.log(localStorage.getItem("loggedUser"), "in fetching all users");
-      fetch("http://localhost:8880/getUsers")
+      fetch("https://chatsocket-4cdz.onrender.com/getUsers")
         .then((data) => data.json())
         .then((res) => {
           // console.log(res);
@@ -136,7 +136,7 @@ const Chat = () => {
     // console.log("logged user", loggedUser);
   };
 
-  const socket = io("http://localhost:8880", {
+  const socket = io("https://chatsocket-4cdz.onrender.com", {
     auth: {
       userId: localStorage.getItem("loggedUser")
         ? JSON.parse(localStorage.getItem("loggedUser")).userId
@@ -243,7 +243,7 @@ const Chat = () => {
 
     // console.log("two users", { firstUser: loggedUser.name, secondUser: id });
     // console.log(secondUser);
-    fetch("http://localhost:8880/chat/getChat", {
+    fetch("https://chatsocket-4cdz.onrender.com/chat/getChat", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
