@@ -6,15 +6,7 @@ const dotenv = require("dotenv");
 app.use(express.json());
 dotenv.config();
 const { Server } = require("socket.io");
-// const server = http.createServer(app);
-const server = http.createServer((req, res) => {
-  // Set CORS headers
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-
-  // Handle your request logic here
-});
+const server = http.createServer(app);
 const io = new Server(server);
 const connectDB = require("./db/connectDB");
 const corsOptions = {
