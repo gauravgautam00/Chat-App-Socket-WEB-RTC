@@ -9,12 +9,8 @@ const { Server } = require("socket.io");
 const server = http.createServer(app);
 const io = new Server(server);
 const connectDB = require("./db/connectDB");
-const corsOptions = {
-  origin: "https://chat-app-socket-web-rtc.vercel.app",
-  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
-};
 
-app.use(cors(corsOptions));
+app.use(cors());
 connectDB();
 const userRouter = require("./routers/userRouter");
 const getUserRouter = require("./routers/getUserRouter");
