@@ -7,7 +7,14 @@ app.use(express.json());
 dotenv.config();
 const { Server } = require("socket.io");
 const server = http.createServer(app);
-const io = new Server(server);
+const io = new Server(server, {
+  cors: {
+    origin: "https://chat-app-socket-web-rtc.vercel.app",
+    methods: ["GET", "POST"],
+    allowedHeaders: ["my-custom-header"],
+    credentials: true,
+  },
+});
 const connectDB = require("./db/connectDB");
 
 app.use(cors());
