@@ -212,51 +212,8 @@ const Chat = () => {
 
   return (
     <div id="chat_container">
-      <div id="chat_container_myDetails">
-        <div id="chat_container_myDetails_first">
-          <span
-            id="chat_container_myDetails_first_icon"
-            class="material-symbols-outlined"
-          >
-            chat
-          </span>
-        </div>
-        <div id="chat_container_myDetails_second">
-          <span
-            id="chat_container_myDetails_second_icon"
-            class="material-symbols-outlined"
-          >
-            groups
-          </span>
-        </div>
-        <div id="chat_container_myDetails_third">
-          <span
-            id="chat_container_myDetails_third_icon"
-            class="material-symbols-outlined"
-          >
-            cloud
-          </span>
-        </div>
-        <div id="chat_container_myDetails_betweenFirst"></div>
-        <div id="chat_container_myDetails_fourth">
-          <span
-            id="chat_container_myDetails_fourth_icon"
-            class="material-symbols-outlined"
-          >
-            calendar_month
-          </span>
-        </div>
-        <div id="chat_container_myDetails_fifth">
-          <span
-            id="chat_container_myDetails_fifth_icon"
-            class="material-symbols-outlined"
-          >
-            settings
-          </span>
-        </div>
-        <div id="chat_container_myDetails_betweenSecond"></div>
-
-        <div id="chat_container_myDetails_sixth" ref={myAccountIcon}>
+      <div id="chat_container_myDetails" ref={myAccountIcon}>
+        <div id="chat_container_myDetails_sixth">
           <span
             id="chat_container_myDetails_sixth_icon"
             class="material-symbols-outlined"
