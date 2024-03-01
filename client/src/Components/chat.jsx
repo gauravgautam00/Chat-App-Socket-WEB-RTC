@@ -22,35 +22,9 @@ const Chat = () => {
   const [allChats, getAllChats] = useState([]);
   const [secondUser, setSecondUser] = useState(null);
   const [secondUserUp, setSecondUserUp] = useState(null);
+  const [isLoaded, setIsLoaded] = useState(null);
 
-  const handleKeyDown = (event) => {
-    // Check if Shift + Enter is pressed
-    console.log("inside handleKeyDown");
-    if (inputMessage.current) {
-      if (event.key === "Enter" && event.shiftKey) {
-        console.log("full inside handleKeyDown");
-
-        // Insert a newline character
-
-        const cursorPosition = inputMessage.current.selectionStart;
-        const inputValue = inputMessage.current.value;
-        const newValue =
-          inputValue.substring(0, cursorPosition) +
-          "\n" +
-          inputValue.substring(inputMessage.current.selectionEnd);
-
-        // Update the input value
-        inputMessage.current.value = newValue;
-
-        // Prevent the default Enter key behavior
-        event.preventDefault();
-      }
-    }
-  };
   useEffect(() => {
-    if (inputMessage.current) {
-      inputMessage.current.addEventListener("keydown", handleKeyDown);
-    }
     if (myAccountIcon.current && myAccountDetail.current) {
       myAccountDetail.current.style.marginLeft = "-19rem";
       myAccountIcon.current.onclick = () => {
@@ -59,42 +33,6 @@ const Chat = () => {
         } else {
           myAccountDetail.current.style.marginLeft = "-19rem";
         }
-      };
-    }
-
-    if (
-      chatContainerHeading.current &&
-      inputMessage.current &&
-      chatContainerMain.current &&
-      sendButton.current &&
-      chatContainerMainContactDetail.current &&
-      chatContainerMainContactDetailBack.current
-      // &&
-      // secondUserUp
-    ) {
-      // console.log("second user", secondUser);
-      chatContainerHeading.current.onclick = () => {
-        if (chatContainerHeading.current.style.width == "39.99rem") {
-          // expand
-          chatContainerHeading.current.style.width = "58.7rem";
-          inputMessage.current.style.width = "64.4%";
-          sendButton.current.style.left = "73.23rem";
-          chatContainerRightPart.current.style.width = "76.45%";
-          chatContainerMainContactDetail.current.style.display = "none";
-        } else {
-          chatContainerHeading.current.style.width = "39.99rem";
-          inputMessage.current.style.width = "41.3%";
-          sendButton.current.style.left = "54.6rem";
-          chatContainerRightPart.current.style.width = "40rem";
-          chatContainerMainContactDetail.current.style.display = "block";
-        }
-      };
-      chatContainerMainContactDetailBack.current.onclick = () => {
-        chatContainerHeading.current.style.width = "58.7rem";
-        inputMessage.current.style.width = "64.4%";
-        sendButton.current.style.left = "73.23rem";
-        chatContainerRightPart.current.style.width = "76.45%";
-        chatContainerMainContactDetail.current.style.display = "none";
       };
     }
   }, [secondUser]);
@@ -155,12 +93,6 @@ const Chat = () => {
     socket.on("message", (message) => {
       console.log("getting message in client", loggedUser, secondUser, message);
       if (secondUser != null && loggedUser != null) {
-        // if (
-        //   (message.sender == secondUser.userId &&
-        //     message.reciever == loggedUser.userId) ||
-        //   (message.reciever == secondUser.userId &&
-        //     message.sender == loggedUser.userId)
-        // ) {
         const sortedSenderReceiverIds = [
           loggedUser.userId,
           secondUser.userId,
@@ -183,10 +115,7 @@ const Chat = () => {
             "loggeduser.userId->",
             loggedUser.userId
           );
-          chatContainerRightPart.current.scrollBy(
-            0,
-            chatContainerRightPart.current.scrollTop + 30
-          );
+
           getAllChats((prev) => {
             return [
               ...prev,
@@ -197,6 +126,13 @@ const Chat = () => {
               },
             ];
           });
+          setTimeout(() => {
+            chatContainerRightPart.current.scrollTo(
+              0,
+              chatContainerRightPart.current.scrollHeight
+            );
+          }, 100);
+          console.log(chatContainerRightPart.current.scrollHeight);
         }
       }
       // }
@@ -226,6 +162,13 @@ const Chat = () => {
       inputMessage.current.value = "";
     } else {
     }
+    setTimeout(() => {
+      chatContainerRightPart.current.scrollTo(
+        0,
+        chatContainerRightPart.current.scrollHeight
+      );
+    }, 100);
+    console.log(chatContainerRightPart.current.scrollHeight);
   };
 
   //FETCHING ALL CHATS
@@ -243,6 +186,7 @@ const Chat = () => {
 
     // console.log("two users", { firstUser: loggedUser.name, secondUser: id });
     // console.log(secondUser);
+    setIsLoaded(false);
     fetch("https://chatsocket-4cdz.onrender.com/chat/getChat", {
       method: "POST",
       headers: {
@@ -253,12 +197,15 @@ const Chat = () => {
       .then((data) => data.json())
       .then((res) => {
         // console.log(res);
+        setIsLoaded(true);
         getAllChats(res);
         setSecondUserUp(true);
-        if (chatContainerRightPart.current) {
-          chatContainerRightPart.current.scrollTop =
-            chatContainerRightPart.current.scrollHeight;
-        }
+        setTimeout(() => {
+          chatContainerRightPart.current.scrollTo(
+            0,
+            chatContainerRightPart.current.scrollHeight
+          );
+        }, 100);
       })
       .catch((err) => console.log("error in fetching all chats", err.message));
   };
@@ -355,32 +302,38 @@ const Chat = () => {
 
         <div id="chat_container_rightPart" ref={chatContainerRightPart}>
           <div id="chat_container_rightPart_allChats">
-            {allChats.map((data, index) => {
-              return (
-                <Child_chats
-                  key={index}
-                  sender={data.sender}
-                  content={data.content}
-                />
-              );
-            })}
+            {isLoaded ? (
+              allChats.map((data, index) => {
+                return (
+                  <Child_chats
+                    key={index}
+                    sender={data.sender}
+                    content={data.content}
+                  />
+                );
+              })
+            ) : (
+              <div style={{ color: "white", fontSize: "larger" }}>Loading</div>
+            )}
           </div>
-
-          <div id="chat_container_rightPart_inputMessage">
+        </div>
+        <div id="chat_container_rightPart_inputMessage">
+          <div id="chat_container_rightPart_inputMessageDiv">
             <input
               id="chat_container_rightPart_inputMessage_real"
               placeholder="Enter your message"
               ref={inputMessage}
             />
-            <div
-              onClick={messageSent}
-              id="chat_container_rightPart_inputMessage_sendButton"
-              ref={sendButton}
-            >
-              Send
-            </div>
+          </div>
+          <div
+            onClick={messageSent}
+            id="chat_container_rightPart_inputMessage_sendButton"
+            ref={sendButton}
+          >
+            Send
           </div>
         </div>
+
         <div
           id="chat_container_main_contactDetail"
           ref={chatContainerMainContactDetail}
