@@ -43,31 +43,33 @@ const signupController = async (req, res) => {
     const existingUser = await userModel.findOne({ email });
 
     if (existingUser) {
-      res.status(400).send("User already exist");
-    } else {
-      const encryptedPassword = await bcrypt.hash(password, 2);
-      const newUser = await userModel.create({
-        name,
-        email,
-        password: encryptedPassword,
-      });
-      const jwtToken = jwt.sign(
-        {
-          userId: newUser._id,
-        },
-        process.env.SECRET_KEY
-      );
-
-      res.status(200).json({
-        message: "successfully sign up",
-        token: jwtToken,
-        user: newUser,
-      });
+      return res.status(400).send("User already exists");
     }
-  } catch (error) {
-    console.log("error in adding the user ", error.message);
 
-    res.status(500).json({ message: "Internal Server Error", error });
+    const encryptedPassword = await bcrypt.hash(password, 2);
+    const newUser = await userModel.create({
+      name,
+      email,
+      password: encryptedPassword,
+    });
+
+    const jwtToken = jwt.sign(
+      {
+        userId: newUser._id,
+      },
+      process.env.SECRET_KEY
+    );
+
+    return res.status(200).json({
+      message: "Successfully signed up",
+      token: jwtToken,
+      user: newUser,
+    });
+  } catch (error) {
+    console.error("Error in adding the user: ", error.message);
+    return res
+      .status(500)
+      .json({ message: "Internal Server Error", error: error.message });
   }
 };
 
