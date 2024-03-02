@@ -3,12 +3,13 @@ const chatModel = require("../models/chatModel");
 const addChat = async (req, res) => {
   const { sender, content, reciever } = req.body;
   try {
-    await chatModel.create({
+    const chat = new chatModel({
       sender,
       content,
       reciever,
+      customCreatedAt: new Date(),
     });
-
+    await chat.save();
     const chatData = await chatModel
       .find({
         sender,

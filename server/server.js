@@ -29,6 +29,9 @@ const userModel = require("./models/userModel");
 app.use("/", userRouter);
 app.use("/getUsers", getUserRouter);
 app.use("/chat", chatRouter);
+app.use("/random", (req, res) => {
+  res.send("on road");
+});
 
 //SOCKETS
 io.on("connection", (socket) => {

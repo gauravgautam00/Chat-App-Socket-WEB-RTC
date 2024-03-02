@@ -1,4 +1,6 @@
 const userModel = require("../models/userModel");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 
 const loginController = async (req, res) => {
   const { email, password } = req.body;
@@ -6,15 +8,24 @@ const loginController = async (req, res) => {
     const existingUser = await userModel.findOne({ email });
 
     if (existingUser) {
-      if (existingUser.password !== password) {
-        res.status(400).send("password is not valid");
+      const passwordMatched = await bcrypt.compare(
+        password,
+        existingUser.password
+      );
+
+      if (!passwordMatched) {
+        res.status(401).send("password is not valid");
       } else {
-        const newUser = await userModel.findOne({
-          email,
-        });
+        const jwtToken = jwt.sign(
+          {
+            userId: existingUser._id,
+          },
+          process.env.SECRET_KEY
+        );
         res.status(200).json({
           message: "successfully logged in ",
-          user: newUser,
+          token: jwtToken,
+          user: existingUser,
         });
       }
     } else {
@@ -33,14 +44,24 @@ const signupController = async (req, res) => {
 
     if (existingUser) {
       res.status(400).send("User already exist");
+      return;
     } else {
+      const encryptedPassword = await bcrypt.hash(password, 2);
       const newUser = await userModel.create({
         name,
         email,
-        password,
+        password: encryptedPassword,
       });
+      const jwtToken = jwt.sign(
+        {
+          userId: newUser._id,
+        },
+        process.env.SECRET_KEY
+      );
+
       res.status(200).json({
         message: "successfully sign up",
+        token: jwtToken,
         user: newUser,
       });
     }

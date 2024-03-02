@@ -16,6 +16,10 @@ const chatSchema = mongoose.Schema(
       ref: "User",
       required: true,
     },
+    customCreatedAt: {
+      type: Date,
+      default: Date.now, // Set a default value to the current date and time when the document is created
+    },
   },
   { timestamps: true }
 );
