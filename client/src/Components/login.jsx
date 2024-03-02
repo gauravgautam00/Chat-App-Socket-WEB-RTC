@@ -15,6 +15,7 @@ const Login = () => {
       };
 
       fetch("https://chatsocket-4cdz.onrender.com/login", {
+        // fetch("http://localhost:8880/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -32,6 +33,7 @@ const Login = () => {
             "loggedUser",
             JSON.stringify({ name: data.user.name, userId: data.user._id })
           );
+          localStorage.setItem("token", data.token);
 
           navigate("/chat");
         })

@@ -17,6 +17,7 @@ const Signup = () => {
       };
 
       fetch("https://chatsocket-4cdz.onrender.com/signup", {
+        // fetch("http://localhost:8880/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -30,10 +31,13 @@ const Signup = () => {
           return res.json();
         })
         .then((data) => {
+          // console.log("insignup details", data);
           localStorage.setItem(
             "loggedUser",
             JSON.stringify({ name: data.user.name, userId: data.user._id })
           );
+          localStorage.setItem("token", data.token);
+          // console.log("local storage up?", localStorage.getItem("loggedUser"));
 
           navigate("/chat");
         })

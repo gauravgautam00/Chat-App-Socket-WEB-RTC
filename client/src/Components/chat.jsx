@@ -49,7 +49,13 @@ const Chat = () => {
     if (localStorage.getItem("loggedUser") != null) {
       setLoggedUser(JSON.parse(localStorage.getItem("loggedUser")));
       // console.log(localStorage.getItem("loggedUser"), "in fetching all users");
-      fetch("https://chatsocket-4cdz.onrender.com/getUsers")
+      fetch("https://chatsocket-4cdz.onrender.com/getUsers", {
+        // fetch("http://localhost:8880/getUsers", {
+        method: "GET",
+        headers: {
+          authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
         .then((data) => data.json())
         .then((res) => {
           // console.log(res);
@@ -75,6 +81,7 @@ const Chat = () => {
   };
 
   const socket = io("https://chatsocket-4cdz.onrender.com", {
+    // const socket = io("http://localhost:8880", {
     auth: {
       userId: localStorage.getItem("loggedUser")
         ? JSON.parse(localStorage.getItem("loggedUser")).userId
@@ -91,30 +98,30 @@ const Chat = () => {
   useEffect(() => {
     // Event listener for incoming messages
     socket.on("message", (message) => {
-      console.log("getting message in client", loggedUser, secondUser, message);
+      // console.log("getting message in client", loggedUser, secondUser, message);
       if (secondUser != null && loggedUser != null) {
         const sortedSenderReceiverIds = [
           loggedUser.userId,
           secondUser.userId,
         ].sort();
         const sortedCurrentChatIds = [message.sender, message.reciever].sort();
-        console.log("MAKING OF UNIQUE METHOD  - CALLING FROM CLIENT");
-        console.log(sortedCurrentChatIds);
-        console.log(sortedSenderReceiverIds);
+        // console.log("MAKING OF UNIQUE METHOD  - CALLING FROM CLIENT");
+        // console.log(sortedCurrentChatIds);
+        // console.log(sortedSenderReceiverIds);
         // Compare sorted IDs with the IDs of the current chat
         const isCurrentChat =
           JSON.stringify(sortedSenderReceiverIds) ===
           JSON.stringify(sortedCurrentChatIds);
         if (isCurrentChat) {
-          console.log(
-            "Received message:",
-            "message->sender",
-            message.sender,
-            "seconduser.userId->",
-            secondUser.userId,
-            "loggeduser.userId->",
-            loggedUser.userId
-          );
+          // console.log(
+          //   "Received message:",
+          //   "message->sender",
+          //   message.sender,
+          //   "seconduser.userId->",
+          //   secondUser.userId,
+          //   "loggeduser.userId->",
+          //   loggedUser.userId
+          // );
 
           getAllChats((prev) => {
             return [
@@ -132,7 +139,7 @@ const Chat = () => {
               chatContainerRightPart.current.scrollHeight
             );
           }, 100);
-          console.log(chatContainerRightPart.current.scrollHeight);
+          // console.log(chatContainerRightPart.current.scrollHeight);
         }
       }
       // }
@@ -168,7 +175,7 @@ const Chat = () => {
         chatContainerRightPart.current.scrollHeight
       );
     }, 100);
-    console.log(chatContainerRightPart.current.scrollHeight);
+    // console.log(chatContainerRightPart.current.scrollHeight);
   };
 
   //FETCHING ALL CHATS
@@ -188,6 +195,7 @@ const Chat = () => {
     // console.log(secondUser);
     setIsLoaded(false);
     fetch("https://chatsocket-4cdz.onrender.com/chat/getChat", {
+      // fetch("http://localhost:8880/chat/getChat", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -216,7 +224,7 @@ const Chat = () => {
         <div id="chat_container_myDetails_sixth">
           <span
             id="chat_container_myDetails_sixth_icon"
-            class="material-symbols-outlined"
+            className="material-symbols-outlined"
           >
             person
           </span>
@@ -260,15 +268,38 @@ const Chat = () => {
         <div id="chat_container_rightPart" ref={chatContainerRightPart}>
           <div id="chat_container_rightPart_allChats">
             {isLoaded ? (
-              allChats.map((data, index) => {
-                return (
-                  <Child_chats
-                    key={index}
-                    sender={data.sender}
-                    content={data.content}
-                  />
-                );
-              })
+              allChats.length > 0 ? (
+                allChats.map((data, index) => {
+                  return (
+                    <Child_chats
+                      key={index}
+                      sender={data.sender}
+                      content={data.content}
+                      time={
+                        data.customCreatedAt
+                          ? new Date(data.customCreatedAt).toLocaleString(
+                              "en-IN",
+                              {
+                                hour: "numeric", // Display the hour (1-12)
+                                minute: "2-digit", // Display the minute (00-59)
+                                hour12: true, // Use the 12-hour clock format with AM/PM indicator
+                              }
+                            )
+                          : new Date().toLocaleString("en-IN", {
+                              hour: "numeric",
+                              minute: "2-digit",
+                              hour12: true,
+                            })
+                      }
+                      createdAt={data.createdAt}
+                    />
+                  );
+                })
+              ) : (
+                <div style={{ color: "white", fontSize: "larger" }}>
+                  Send your message to start the chat
+                </div>
+              )
             ) : (
               <div style={{ color: "white", fontSize: "larger" }}>Loading</div>
             )}
@@ -301,7 +332,7 @@ const Chat = () => {
           >
             <span
               id="chat_container_main_contactDetail_backIcon"
-              class="material-symbols-outlined"
+              className="material-symbols-outlined"
             >
               arrow_back
             </span>

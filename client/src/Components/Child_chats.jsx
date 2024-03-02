@@ -8,6 +8,7 @@ const Child_chats = (props) => {
     if (JSON.parse(localStorage.getItem("loggedUser")).userId == props.sender) {
       setIsLoggedUser(true);
     }
+    console.log("time", props.time);
   }, []);
 
   return (
@@ -23,7 +24,8 @@ const Child_chats = (props) => {
         paddingRight: "16px",
       }}
     >
-      <div style={{ fontSize: "1.2vw" }}>{props.content}</div>
+      <div style={{ fontSize: "1.3vw" }}>{props.content}</div>
+      <div id="child_chatMessage_time">{props.time}</div>
     </div>
   );
 };
