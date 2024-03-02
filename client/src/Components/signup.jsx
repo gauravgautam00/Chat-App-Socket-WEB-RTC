@@ -1,7 +1,9 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
+  const [isLoading, setIsLoading] = useState(false);
+
   const getName = useRef(null);
   const getEmail = useRef(null);
   const getPassword = useRef(null);
@@ -15,7 +17,7 @@ const Signup = () => {
         email: getEmail.current.value,
         password: getPassword.current.value,
       };
-
+      setIsLoading(true);
       fetch("https://chatsocket-4cdz.onrender.com/signup", {
         // fetch("http://localhost:8880/signup", {
         method: "POST",
@@ -25,6 +27,8 @@ const Signup = () => {
         body: JSON.stringify(userDetails),
       })
         .then((res) => {
+          setIsLoading(false);
+
           if (!res.ok) {
             throw new Error(`HTTP error! Status: ${res.status}`);
           }
@@ -72,6 +76,7 @@ const Signup = () => {
           ref={getPassword}
         />
       </div>
+      <div id="signup_container_loading">{isLoading ? "Loading..." : ""}</div>
       <div onClick={handleSubmit} id="signup_container_submit">
         Submit
       </div>

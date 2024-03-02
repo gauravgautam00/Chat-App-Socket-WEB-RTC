@@ -1,9 +1,10 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const getEmail = useRef(null);
   const getPassword = useRef(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -13,7 +14,7 @@ const Login = () => {
         email: getEmail.current.value,
         password: getPassword.current.value,
       };
-
+      setIsLoading(true);
       fetch("https://chatsocket-4cdz.onrender.com/login", {
         // fetch("http://localhost:8880/login", {
         method: "POST",
@@ -23,6 +24,7 @@ const Login = () => {
         body: JSON.stringify(userDetails),
       })
         .then((res) => {
+          setIsLoading(false);
           if (!res.ok) {
             alert("Either user don't exist or credentials are wrong");
             throw new Error(`HTTP error! Status: ${res.status}`);
@@ -60,6 +62,7 @@ const Login = () => {
           ref={getPassword}
         />
       </div>
+      <div id="login_container_loading">{isLoading ? "Loading..." : ""}</div>
       <div onClick={handleSubmit} id="login_container_submit">
         Submit
       </div>

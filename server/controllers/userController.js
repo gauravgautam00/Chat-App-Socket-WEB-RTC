@@ -44,7 +44,6 @@ const signupController = async (req, res) => {
 
     if (existingUser) {
       res.status(400).send("User already exist");
-      return;
     } else {
       const encryptedPassword = await bcrypt.hash(password, 2);
       const newUser = await userModel.create({
@@ -67,7 +66,8 @@ const signupController = async (req, res) => {
     }
   } catch (error) {
     console.log("error in adding the user ", error.message);
-    res.status(500).json({ message: "Internal Server Error" });
+
+    res.status(500).json({ message: "Internal Server Error", error });
   }
 };
 
