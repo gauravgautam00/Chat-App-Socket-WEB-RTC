@@ -9,15 +9,26 @@ const { Server } = require("socket.io");
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "https://chat-app-socket-web-rtc.vercel.app",
+    origin: [
+      // "http://localhost:3000/chat",
+      // "http://localhost:3000",
+      "https://chat-app-socket-web-rtc.vercel.app",
+    ],
     methods: ["GET", "POST"],
-    allowedHeaders: ["my-custom-header"],
-    credentials: true,
   },
 });
 const connectDB = require("./db/connectDB");
 
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      // "http://localhost:3000/chat",
+      // "http://localhost:3000",
+      "https://chat-app-socket-web-rtc.vercel.app",
+    ],
+    methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
+  })
+);
 connectDB();
 const userRouter = require("./routers/userRouter");
 const getUserRouter = require("./routers/getUserRouter");

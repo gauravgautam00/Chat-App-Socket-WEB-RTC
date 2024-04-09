@@ -3,17 +3,16 @@ import ChildAllUser from "./ChildAllUser";
 import Child_chats from "./Child_chats";
 import io from "socket.io-client";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Chat = () => {
+  const navigate = useNavigate();
   const chatContainerRightPart = useRef(null);
-  const chatContainerHeading = useRef(null);
+
   const chatContainerMain = useRef(null);
   const chatContainerLeftPart = useRef(null);
-  const chatContainerMainContactDetail = useRef(null);
-  const chatContainerMainContactDetailBack = useRef(null);
-  const myAccountIcon = useRef(null);
-  const myAccountDetail = useRef(null);
 
+  const chatContainerRightPartAllChats = useRef(null);
   const inputMessage = useRef(null);
   const sendButton = useRef(null);
   const [loggedUser, setLoggedUser] = useState(null);
@@ -22,20 +21,22 @@ const Chat = () => {
   const [allChats, getAllChats] = useState([]);
   const [secondUser, setSecondUser] = useState(null);
   const [secondUserUp, setSecondUserUp] = useState(null);
-  const [isLoaded, setIsLoaded] = useState(null);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [shimmerChat, setShimmerChat] = useState([]);
 
   useEffect(() => {
-    if (myAccountIcon.current && myAccountDetail.current) {
-      myAccountDetail.current.style.marginLeft = "-19rem";
-      myAccountIcon.current.onclick = () => {
-        if (myAccountDetail.current.style.marginLeft == "-19rem") {
-          myAccountDetail.current.style.marginLeft = "0rem";
-        } else {
-          myAccountDetail.current.style.marginLeft = "-19rem";
-        }
-      };
+    if (!localStorage.getItem("loggedUser")) {
+      navigate("/");
     }
-  }, [secondUser]);
+
+    const tempData = [];
+    for (let i = 0; i < 10; i++) {
+      tempData.push({
+        content: "Loading chat",
+      });
+    }
+    setShimmerChat(tempData);
+  }, []);
 
   //FETCHING ALL USERS
   //FETCHING ALL USER
@@ -134,9 +135,9 @@ const Chat = () => {
             ];
           });
           setTimeout(() => {
-            chatContainerRightPart.current.scrollTo(
+            chatContainerRightPartAllChats.current.scrollTo(
               0,
-              chatContainerRightPart.current.scrollHeight
+              chatContainerRightPartAllChats.current.scrollHeight
             );
           }, 100);
           // console.log(chatContainerRightPart.current.scrollHeight);
@@ -170,9 +171,9 @@ const Chat = () => {
     } else {
     }
     setTimeout(() => {
-      chatContainerRightPart.current.scrollTo(
+      chatContainerRightPartAllChats.current.scrollTo(
         0,
-        chatContainerRightPart.current.scrollHeight
+        chatContainerRightPartAllChats.current.scrollHeight
       );
     }, 100);
     // console.log(chatContainerRightPart.current.scrollHeight);
@@ -209,9 +210,9 @@ const Chat = () => {
         getAllChats(res);
         setSecondUserUp(true);
         setTimeout(() => {
-          chatContainerRightPart.current.scrollTo(
+          chatContainerRightPartAllChats.current.scrollTo(
             0,
-            chatContainerRightPart.current.scrollHeight
+            chatContainerRightPartAllChats.current.scrollHeight
           );
         }, 100);
       })
@@ -220,35 +221,9 @@ const Chat = () => {
 
   return (
     <div id="chat_container">
-      <div id="chat_container_myDetails" ref={myAccountIcon}>
-        <div id="chat_container_myDetails_sixth">
-          <span
-            id="chat_container_myDetails_sixth_icon"
-            className="material-symbols-outlined"
-          >
-            person
-          </span>
-        </div>
-      </div>
-
       <div id="chat_container_main" ref={chatContainerMain}>
-        <div id="chat_container_heading" ref={chatContainerHeading}>
-          {secondUser == null || secondUserUp == null
-            ? "Select User to initiate the chat"
-            : secondUser.name}
-        </div>
-        <div id="chat_container_main_myAccount" ref={myAccountDetail}>
-          <div id="chat_container_main_myAccount_name">
-            {loggedUser ? loggedUser.name : null}
-          </div>
-          <div id="chat_container_main_myAccount_newGroup">New Group</div>
-          <div id="chat_container_main_myAccount_contacts">Contacts</div>
-          <div id="chat_container_main_myAccount_calls">Calls</div>
-          <div id="chat_container_main_myAccount_savedMessage">
-            Saved Message
-          </div>
-        </div>
         <div id="chat_container_leftPart" ref={chatContainerLeftPart}>
+          <div id="chat_container_leftPart_heading">Messages</div>
           {allUsers
             .filter((data) => data._id !== loggedUser.userId)
             .map((data, index) => {
@@ -266,7 +241,15 @@ const Chat = () => {
         </div>
 
         <div id="chat_container_rightPart" ref={chatContainerRightPart}>
-          <div id="chat_container_rightPart_allChats">
+          <div id="chat_container_heading">
+            {secondUser == null || secondUserUp == null
+              ? "Select User to initiate the chat"
+              : secondUser.name}
+          </div>
+          <div
+            id="chat_container_rightPart_allChats"
+            ref={chatContainerRightPartAllChats}
+          >
             {isLoaded ? (
               allChats.length > 0 ? (
                 allChats.map((data, index) => {
@@ -301,75 +284,26 @@ const Chat = () => {
                 </div>
               )
             ) : (
-              <div style={{ color: "white", fontSize: "larger" }}>Loading</div>
+              <div style={{ color: "white", fontSize: "larger" }}>
+                {secondUser != null ? "Loading" : ""}
+              </div>
             )}
           </div>
-        </div>
-        <div id="chat_container_rightPart_inputMessage">
-          <div id="chat_container_rightPart_inputMessageDiv">
-            <input
-              id="chat_container_rightPart_inputMessage_real"
-              placeholder="Enter your message"
-              ref={inputMessage}
-            />
-          </div>
-          <div
-            onClick={messageSent}
-            id="chat_container_rightPart_inputMessage_sendButton"
-            ref={sendButton}
-          >
-            Send
-          </div>
-        </div>
-
-        <div
-          id="chat_container_main_contactDetail"
-          ref={chatContainerMainContactDetail}
-        >
-          <div
-            id="chat_container_main_contactDetail_back"
-            ref={chatContainerMainContactDetailBack}
-          >
-            <span
-              id="chat_container_main_contactDetail_backIcon"
-              className="material-symbols-outlined"
-            >
-              arrow_back
-            </span>
-            <div id="chat_container_main_contactDetail_back_data">Back</div>
-          </div>
-          <div id="chat_container_main_contactDetail_profilePhoto">
-            <img
-              id="chat_container_main_contactDetail_profilePhoto_photo"
-              src="/Images/userDummy.png"
-              height="128px"
-              width="128px"
-            />
-          </div>
-          <div id="chat_container_main_contactDetail_name">
-            {secondUser ? secondUser.name : "Select User"}
-          </div>
-          <div id="chat_container_main_contactDetail_about">
-            <div id="chat_container_main_contactDetail_about_first">About</div>
-            <div id="chat_container_main_contactDetail_about_second">Happy</div>
-          </div>
-          <div id="chat_container_main_contactDetail_desc">
-            <div id="chat_container_main_contactDetail_desc_first">
-              Description
+          <div id="chat_container_rightPart_inputMessage">
+            <div id="chat_container_rightPart_inputMessageDiv">
+              <input
+                id="chat_container_rightPart_inputMessage_real"
+                placeholder="Enter your message"
+                ref={inputMessage}
+              />
+              <span
+                onClick={messageSent}
+                id="chat_send_icon"
+                class="material-symbols-outlined"
+              >
+                send
+              </span>
             </div>
-            <div id="chat_container_main_contactDetail_desc_second">
-              We have two lives , and the second begins when we realize we only
-              have one
-            </div>
-          </div>
-          <div id="chat_container_main_contactDetail_block">
-            Block {secondUser ? secondUser.name : "Select User"}
-          </div>
-          <div id="chat_container_main_contactDetail_report">
-            Report {secondUser ? secondUser.name : "Select User"}
-          </div>
-          <div id="chat_container_main_contactDetail_deleteChat">
-            Delete Chat
           </div>
         </div>
       </div>
