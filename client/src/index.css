@@ -307,7 +307,7 @@ body {
 #child_chatMessage_container_text {
   display: inline-block;
 
-  font-size: 1.2vw;
+  /* font-size: 1.2vw; */
   word-wrap: break-word;
   max-width: 28rem;
   padding: 8px;
